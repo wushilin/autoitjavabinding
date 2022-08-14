@@ -8,6 +8,7 @@ import com.sun.jna.platform.win32.WinDef.HINSTANCE
 import com.sun.jna.platform.win32.WinDef.HWND
 import com.sun.jna.platform.win32.WinDef.RECT
 import com.sun.jna.platform.win32.WinDef.POINT
+import com.sun.jna.ptr.PointerByReference
 
 
 interface AutoitX : Library {
@@ -50,7 +51,7 @@ interface AutoitX : Library {
     fun AU3_ControlGetFocusByHandle(hWnd:HWND, szControlWithFocus:LPWSTR, nBufSize:Int)
     fun AU3_ControlGetHandle(hWnd:HWND, szControl:WString):HWND
     fun AU3_ControlGetHandleAsText(szTitle:WString, szText:WString, szControl:WString, szRetText:LPWSTR, nBufSize:Int);
-    fun AU3_ControlGetPos(szTitle:WString, szText:WString, szControl:WString, lpRect: WinDef.RECT):Int
+    fun AU3_ControlGetPos(szTitle:WString, szText:WString, szControl:WString, lpRect: RECT):Int
     fun AU3_ControlGetPosByHandle(hWnd:HWND, hCtrl:HWND, lpRect: WinDef.RECT):Int
     fun AU3_ControlGetText(szTitle:WString, szText:WString, szControl:WString, szControlText:LPWSTR, nBufSize:Int);
     fun AU3_ControlGetTextByHandle(hWnd:HWND, hCtrl:HWND, szControlText:LPWSTR, nBufSize:Int);
@@ -75,14 +76,14 @@ interface AutoitX : Library {
     fun AU3_MouseClickDrag(szButton:WString, nX1:Int, nY1:Int, nX2:Int, nY2:Int, nSpeed:Int = -1):Int
     fun AU3_MouseDown(/*[in,defaultvalue("LEFT")]*/szButton:WString)
     fun AU3_MouseGetCursor():Int
-    fun AU3_MouseGetPos(lpPoint:POINT)
+    fun AU3_MouseGetPos(lpPoint:POINT.ByReference)
     fun AU3_MouseMove(nX:Int, nY:Int, nSpeed:Int = -1):Int
     fun AU3_MouseUp(/*[in,defaultvalue("LEFT")]*/szButton:WString)
     fun AU3_MouseWheel(szDirection:WString, nClicks:Int)
     fun AU3_Opt(szOption:WString, nValue:Int):Int
-    fun AU3_PixelChecksum(lpRect:RECT, nStep:Int = 1):UInt
+    fun AU3_PixelChecksum(lpRect: RECT, nStep:Int=1):Int
     fun AU3_PixelGetColor(nX:Int, nY:Int):Int
-    fun AU3_PixelSearch(lpRect:RECT, nCol:Int, /*default 0*/nVar:Int, /*default 1*/nStep:Int, pPointResult:POINT)
+    fun AU3_PixelSearch(lpRect:RECT, nCol:Int, /*default 0*/nVar:Int, /*default 1*/nStep:Int, pPointResult:POINT.ByReference)
     fun AU3_ProcessClose(szProcess:WString):Int
     fun AU3_ProcessExists(szProcess:WString):Int
     fun AU3_ProcessSetPriority(szProcess:WString, nPriority:Int):Int
@@ -106,7 +107,7 @@ interface AutoitX : Library {
     fun AU3_WinCloseByHandle(hWnd:HWND):Int
     fun AU3_WinExists(szTitle:WString, /*[in,defaultvalue("")]*/szText:WString):Int
     fun AU3_WinExistsByHandle(hWnd:HWND):Int
-    fun AU3_WinGetCaretPos(lpPoint:POINT):Int
+    fun AU3_WinGetCaretPos(lpPoint:POINT.ByReference):Int
     fun AU3_WinGetClassList(szTitle:WString, /*[in,defaultvalue("")]*/szText:WString, szRetText:LPWSTR, nBufSize:Int)
     fun AU3_WinGetClassListByHandle(hWnd:HWND, szRetText:LPWSTR, nBufSize:Int)
     fun AU3_WinGetClientSize(szTitle:WString, /*[in,defaultvalue("")]*/szText:WString, lpRect:RECT):Int

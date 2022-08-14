@@ -4,17 +4,17 @@ import com.sun.jna.WString
 import com.sun.jna.platform.win32.BaseTSD
 import com.sun.jna.platform.win32.WTypes
 import com.sun.jna.platform.win32.WinDef
+import com.sun.jna.platform.win32.WinDef.RECT
+import com.sun.jna.ptr.ByReference
 import com.sun.jna.ptr.IntByReference
-import net.wushilin.autoitx.AU3Init
-import net.wushilin.autoitx.Au3Library
-import net.wushilin.autoitx.AutoitX
-import net.wushilin.autoitx.DataUtil
+import com.sun.jna.ptr.PointerByReference
+import net.wushilin.autoitx.*
 
 fun main(args:Array<String>) {
     //System.setProperty("java.library.path", "./bin")
-    val lib: AutoitX = Native.load("AutoItX3_x64", AutoitX::class.java)
+    val lib: AutoitX = AutoitXLoader.loadAutoit3X64()
     AU3Init.init(lib)
-    val ct:Au3Library = Native.load("Au3Library", Au3Library::class.java)
+    val ct:Au3Library = Au3LibraryLoader.loadAu3LibraryX64()
     //testAU3(lib)
     testCT(ct, lib)
 }
@@ -28,6 +28,9 @@ fun testCT(ct:Au3Library, lib:AutoitX) {
     val msg_address = 0x11B6DF4
     while(true) {
         println(ct.GetCursorID())
+        var pp = WinDef.POINT.ByReference(1, 1)
+        lib.AU3_MouseGetPos(pp)
+        println("Mouse Pos: " + pp.x + "," + pp.y)
         println("Money: ${ct.ReadMemoryInt(process, 0x11B7188)}")
         println("POS_X: ${ct.ReadMemoryFloat(process, 0x11B7200)}")
         ct.WriteMemoryInt(process, mana_address, 12)
@@ -39,7 +42,15 @@ fun testCT(ct:Au3Library, lib:AutoitX) {
         val readResult = ct.DReadProcessMemory(process, Pointer.createConstant(real_address), buffer, BaseTSD.SIZE_T(1024), readCount)
         println("Read result ${readResult}")
         println("Read count ${readCount.value}")
-        println(String(buffer))
+        //println(String(buffer))
+        var rect = WinDef.RECT()
+        rect.top = 0
+        rect.left = 0
+        rect.bottom = 5
+        rect.right = 5
+
+        println(lib.AU3_PixelGetColor(400, 400))
+        println(lib.AU3_PixelChecksum(rect, 1))
         Thread.sleep(1000)
     }
 }
